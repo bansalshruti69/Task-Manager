@@ -47,48 +47,57 @@ table {
 	border-spacing: 0;
 }
 header{
-    background-image: linear-gradient(to right,white,black,white);
-    color:white;
-    display: block;
+    min-height: 40px;
+    max-height: 40px;
+    overflow: hidden;
+}
+
+.trello-logo{
+    font-size: 30px;
+    font-weight:700;
+    color: rgba(255,255,255, 0.5);
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 5px;
+    text-align: center;
+}
+
+.trello-logo:hover{
+    color:rgba(255,255,255, 1);
+    cursor: pointer;
+}
+.sub-header{
+    cursor: pointer;
+    background-image: linear-gradient(to right, rgb(75,191,107),white,rgb(75,191,107));
+    color:rgb(75,191,107);
     text-align: center;
     font-size:50px;
     font-weight: 700;
     height:2em;
 
 }
-header h1{
+.sub-header h1{
     position: relative;
     top:0.5em;
 }
 
 body{
-    background-color:rgb(230,230,230);
-}
-
-.users{
-    white-space: nowrap;
-    overflow:auto;
+    background-color: rgb(75,191,107);
 }
 
 .user__profile{
     display: inline-block;
     box-sizing: border-box;
-    margin:10px;
-    margin-left:0;
+    margin:10px 1%;
     border-radius:5px;
-    background-color: white;
+    background-color: rgba(255,255,255);
     text-align: center;
-    width: 200px;
+    width: 14.4%;
     padding:20px;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
-.user__profile:first-of-type{
-    margin-left: 10px;
-}
-
 .user__profile--image{
-    display: block;
     width: 150px;
     height: 150px;
     object-fit: cover;
@@ -105,16 +114,6 @@ body{
     font-size:18px;
     font-weight:100;
     color:gray;
-}
-
-.user__profile--add{
-    padding:20px;
-    margin-right: 10px;
-    text-align: center;
-    width:200px;
-    display: inline-block;
-    background-color: rgba(255,255,255,0.5);
-    border-radius:5px;
 }
 
 

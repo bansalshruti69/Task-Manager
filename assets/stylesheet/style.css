@@ -153,18 +153,27 @@ strong{
     margin-bottom: 5px;
     width: 272px;
     margin: 0 4px;
-    max-height: 880px;
     box-sizing: border-box;
     display: inline-block;
     vertical-align: top;
-    overflow: auto;
-    white-space: nowrap;
+    /*white-space: nowrap;
     margin-bottom: 10px;
+    max-height: 880px;
+    overflow:auto;*/
+    max-height: 100%;
+}
+
+.card-content-group{
+    width: 272px;
+    white-space: nowrap;
+    max-height: 830px;
+    overflow:auto;
 }
 
 .card-group .card:last-of-type{
     margin-right: 0;
 }
+
 
 .card-title{
     cursor: pointer;

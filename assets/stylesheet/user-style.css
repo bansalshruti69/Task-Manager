@@ -85,14 +85,19 @@ body{
     background-color: rgb(75,191,107);
 }
 
+.users{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
 .user__profile{
-    display: inline-block;
-    box-sizing: border-box;
     margin:10px 1%;
+    box-sizing: border-box;
     border-radius:5px;
     background-color: rgba(255,255,255);
     text-align: center;
-    width: 14.4%;
+    width: 14.45%;
     padding:20px;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }

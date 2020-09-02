@@ -47,9 +47,11 @@ table {
 	border-spacing: 0;
 }
 header{
-    min-height: 40px;
-    max-height: 40px;
-    overflow: hidden;
+    position: fixed;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 40px;
 }
 
 .trello-logo{
@@ -66,23 +68,20 @@ header{
     color:rgba(255,255,255, 1);
     cursor: pointer;
 }
-.sub-header{
-    cursor: pointer;
-    background-image: linear-gradient(to right, rgb(75,191,107),white,rgb(75,191,107));
-    color:rgb(75,191,107);
-    text-align: center;
-    font-size:50px;
-    font-weight: 700;
-    height:2em;
 
-}
-.sub-header h1{
-    position: relative;
-    top:0.5em;
-}
 
 body{
+    height:100%;
+    width:100%;
     background-color: rgb(75,191,107);
+}
+
+.users-group{
+    position: absolute;
+    top:40px;
+    left:0;
+    overflow:auto;
+    bottom: 0;
 }
 
 .users{

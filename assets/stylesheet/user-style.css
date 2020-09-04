@@ -91,12 +91,12 @@ body{
 }
 
 .user__profile{
-    margin:10px 1%;
+    margin:10px 17px;
     box-sizing: border-box;
     border-radius:5px;
     background-color: rgba(255,255,255);
     text-align: center;
-    width: 14.45%;
+    width: 260px;
     padding:20px;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
@@ -122,7 +122,7 @@ body{
 
 #add-icon img{
     box-sizing: border-box;
-    padding: 50px 50px;
+    padding:50px 50px;
     width:100%;
     vertical-align: middle;
     opacity: 0.5;
@@ -153,4 +153,13 @@ body{
     color:white;
     background-color: rgb(75,191,107);
     border:none;
+}
+
+.delete-user-button{
+    margin:5px;
+    padding:10px;
+    color:white;
+    background-color: rgb(75,191,107);
+    border:none;
+    margin-bottom: 0;
 }

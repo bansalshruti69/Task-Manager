@@ -296,6 +296,7 @@ strong{
     background-color:rgb(75,191,107);
 }
 .card__add-list{
+    border-radius: 3px;
     padding:10px 10px;
     color: white;
     background-color: rgba(255,255,255, 0.3);
@@ -305,4 +306,24 @@ strong{
     cursor: pointer;
     background-color: rgba(255,255,255, 0.5);
 }
+
+#add-another-list-in{
+    margin-right: 10px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 7px;
+}
+
+.add-another-list-button{
+    margin-top:10px;
+}
+
+.add-another-list-button button{
+    border:none;
+    padding: 5px;
+    border-radius: 3px;
+    color:white;
+    background-color: rgb(75,191,107);
+}
+
 

@@ -120,4 +120,37 @@ body{
     color:gray;
 }
 
+#add-icon img{
+    box-sizing: border-box;
+    padding: 50px 50px;
+    width:100%;
+    vertical-align: middle;
+    opacity: 0.5;
+}
 
+#add-icon img:hover{
+    cursor: pointer;
+    opacity: 1;
+}
+
+.add-user-info{
+    text-align: left;
+    font-size: 18px;
+}
+
+.add-user-info input{
+    height: 20px;
+    width: 100%;
+}
+
+.add-user-info div{
+    margin: 5px;
+}
+
+.add-user-info-button button{
+    margin:5px;
+    padding:10px;
+    color:white;
+    background-color: rgb(75,191,107);
+    border:none;
+}

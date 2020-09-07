@@ -14,12 +14,13 @@ const octopus = {
     },
     addCardList:function(val){
         obj = {
+            id:octopus.getCardListId(),
             cardListUser: val,
             cardListContent:[],
-            display:true,
             cardId:0
         };
         model.cardsList.push(obj);
+        view.createCardList(obj);
     },
     getCardListId: function(){
         return model.cardListId++;
@@ -41,6 +42,9 @@ const octopus = {
     },
     removeCard: function(id1,id2){
         model.cardsList[id1].cardListContent[id2].display = false;
+    },
+    getCardList: function(){
+        return model.cardsList;
     }
 };
 
@@ -54,6 +58,8 @@ const view = {
         buttonSave.addEventListener('click',view.saveAddAnotherListDisplay);
         accountManagementDiv = document.querySelector(".account-management-cancel");
         accountManagementDiv.addEventListener('click',view.removeAccountManagementDiv);
+    },
+    render: function(){
 
     },
     removeAccountManagementDiv: function(event){
@@ -74,19 +80,18 @@ const view = {
     saveAddAnotherListDisplay: function(){
         val = document.getElementById("add-another-list-in").value;
         octopus.addCardList(val);
-        view.createCardList(val);
         view.canceladdAnotherListDisplay();
     },
-    createCardList: function(val){
+    createCardList: function(obj){
         section1 = document.createElement('section');
         section1.classList.add("card");
-        section1.setAttribute("data-cardListId",octopus.getCardListId());
+        section1.setAttribute("data-cardListId",obj.id);
         //Card Title Creation
         div1 = document.createElement('div');
         div1.classList.add("card-title");
         div2 = document.createElement('div');
         div2.classList.add("card-user-name");
-        div2.textContent = val;
+        div2.textContent = obj.cardListUser;
         div1.append(div2);
         p1 = document.createElement('img');
         p1.src="assets/images/cancel-icon.png";

@@ -54,14 +54,52 @@ header{
     height: 40px;
 }
 
+
 .trello-logo{
+    white-space: nowrap;
+    position: fixed;
+    display: inline-block;
     font-size: 30px;
     font-weight:700;
     color: rgba(255,255,255, 0.5);
     margin-left: auto;
     margin-right: auto;
-    padding-top: 5px;
-    text-align: center;
+    margin-top: 5px;
+    padding:5px 0;
+    vertical-align: middle;
+    left:45%;
+    right: 50%;
+}
+
+.header-dashboard,
+.header-userboard{
+    color:white;
+    display: inline-block;
+    font-size: 24px;
+    font-weight:400;
+    margin:7px 0 7px 5px;
+    padding: 5px;
+    border-radius: 3px;
+    background-color: rgba(255,255,255, 0.3);
+    vertical-align: middle;
+}
+
+.header-userboard:hover,
+.header-dashboard:hover{
+    cursor: pointer;
+    background-color: rgba(255,255,255,1);
+    color: #377d24;
+}
+
+.header-userboard{
+    background-color: rgba(255,255,255,1);
+    color: #377d24;
+}
+
+.header-dashboard a,
+.header-userboard a{
+    text-decoration: none;
+    color: inherit;
 }
 
 .trello-logo:hover{
@@ -83,14 +121,14 @@ body{
     overflow:auto;
     bottom: 0;
 }
-
 .users{
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
 }
 
-.user__profile{
+.user__profile,
+.add-user__profile{
     margin:10px 17px;
     box-sizing: border-box;
     border-radius:5px;
@@ -98,6 +136,7 @@ body{
     text-align: center;
     width: 260px;
     padding:20px;
+    height: auto;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
@@ -133,17 +172,20 @@ body{
     opacity: 1;
 }
 
-.add-user-info{
+.add-user-info,
+.add-user-info1{
     text-align: left;
     font-size: 18px;
 }
 
-.add-user-info input{
+.add-user-info input,
+.add-user-info1 input{
     height: 20px;
     width: 100%;
 }
 
-.add-user-info div{
+.add-user-info div,
+.add-user-info1 div{
     margin: 5px;
 }
 
@@ -155,11 +197,13 @@ body{
     border:none;
 }
 
-.delete-user-button{
+.delete-user-button,
+.edit-user-button{
     margin:5px;
     padding:10px;
     color:white;
     background-color: rgb(75,191,107);
     border:none;
     margin-bottom: 0;
+    border-radius:3px;
 }

@@ -35,10 +35,10 @@ const octopus = {
         }
         view.render();
     },
-    addCard: function(id,val){
+    addCard: function(id,val,statusVal = "Assigned"){
         obj = {
             task: val,
-            status:"Assigned",
+            status:statusVal,
             id: octopus.getCardId(id)
         }
         cardsList = model.cardsList;
@@ -101,6 +101,29 @@ const octopus = {
             }
         }
         view.render();
+    },
+    dragAndDropCard: function(val,id){
+        index = val.indexOf(" ");
+        id1 = val.slice(0,index);
+        id2 = val.slice(index+1);
+        if(id1==id)
+        return;
+        obj = octopus.getIndividualCard(id1,id2);
+        task = obj.task;
+        status = obj.status;
+        cardsList = model.cardsList;
+        for(let i = 0;i<cardsList.length;i++){
+            if(cardsList[i].id==id1){
+                for(let j = 0;j<cardsList[i].cardListContent.length;j++){
+                    if(cardsList[i].cardListContent[j].id==id2){
+                        model.cardsList[i].cardListContent.splice(j,1);
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        octopus.addCard(id,task,status);
     }
 };
 
@@ -173,10 +196,20 @@ const view = {
         val = document.getElementById("add-another-list-in").value;
         octopus.addCardList(val);
     },
+    cardDragOver: function(event){
+        event.preventDefault();
+    },
+    cardDrop: function(event){
+        val = event.dataTransfer.getData('text');
+        id = event.currentTarget.getAttribute("data-cardListId");
+        octopus.dragAndDropCard(val,id);
+    },
     createCardList: function(obj){
         section1 = document.createElement('section');
         section1.classList.add("card");
         section1.setAttribute("data-cardListId",obj.id);
+        section1.addEventListener("dragover",view.cardDragOver);
+        section1.addEventListener("drop",view.cardDrop);
         //Card Title Creation
         div1 = document.createElement('div');
         div1.classList.add("card-title");
@@ -249,10 +282,16 @@ const view = {
         val = section.querySelector(".add-another-card-in").value;
         octopus.addCard(id,val);
     },
+    cardDrag: function(event){
+        event.dataTransfer.setData('text',event.target.getAttribute("data-cardIdListId")+" "+event.target.getAttribute("data-cardId"));
+    },
     addCard: function(obj,val){
         section = document.querySelector(`[data-cardListId="${val}"]`);
         div1 = document.createElement('div');
         div1.setAttribute("data-cardId",obj.id);
+        div1.setAttribute("data-cardIdListId",val);
+        div1.draggable = true;
+        div1.addEventListener('dragstart',view.cardDrag);
         div1.classList.add("card-content");
         div = document.createElement('div');
         div.setAttribute("data-cardIdDefaultDisplay",obj.id);
@@ -342,6 +381,9 @@ const view = {
         div3.querySelector(".card-edit-display-status-input").value = card.status;
     },
     removeCard: function(event){
+        result = confirm("Do you want to remove this card?");
+        if(!result)
+        return;
         id1 = event.target.getAttribute("data-cardListIdRemoveCard");
         id2 = event.target.getAttribute("data-cardIdRemoveCard");
         octopus.removeCard(id1,id2);
@@ -354,6 +396,9 @@ const view = {
         section.querySelector(".add-another-card-in").value = "";
     },
     removeCardList: function(event){
+        result = confirm("Do you want to remove this User?");
+        if(!result)
+        return;
         section = event.target;
         id = section.getAttribute("data-cardListIdRemove");
         octopus.removeCardList(id);

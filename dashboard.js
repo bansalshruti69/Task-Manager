@@ -20,53 +20,145 @@ const octopus = {
             cardId:0
         };
         model.cardsList.push(obj);
-        view.createCardList(obj);
+        view.render();
     },
     getCardListId: function(){
         return model.cardListId++;
     },
     removeCardList: function(val){
-        obj = model.cardList[val];
-        obj.display = false;
+        cardsList = model.cardsList;
+        for(let i = 0;i<cardsList.length;i++){
+            if(cardsList[i].id==val){
+                model.cardsList.splice(i,1);
+                break;
+            }
+        }
+        view.render();
     },
     addCard: function(id,val){
         obj = {
             task: val,
             status:"Assigned",
-            display:true
+            id: octopus.getCardId(id)
         }
-        model.cardsList[id].cardListContent.push(obj);
+        cardsList = model.cardsList;
+        for(let i = 0;i<cardsList.length;i++){
+            if(cardsList[i].id==id){
+                model.cardsList[i].cardListContent.push(obj);
+                break;
+            }
+        }
+        view.render();
     },
     getCardId: function(val){
-        return model.cardsList[val].cardId++;
+        cardsList = model.cardsList;
+        for(let i = 0;i<cardsList.length;i++){
+            if(cardsList[i].id==val){
+                return model.cardsList[i].cardId++;
+            }
+        }
     },
     removeCard: function(id1,id2){
-        model.cardsList[id1].cardListContent[id2].display = false;
+        cardsList = model.cardsList;
+        for(let i = 0;i<cardsList.length;i++){
+            if(cardsList[i].id==id1){
+                for(let j = 0;j<cardsList[i].cardListContent.length;j++){
+                    if(cardsList[i].cardListContent[j].id==id2){
+                        model.cardsList[i].cardListContent.splice(j,1);
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        view.render();
     },
     getCardList: function(){
         return model.cardsList;
+    },
+    getIndividualCard: function(id1,id2){
+        for(let i = 0;i<cardsList.length;i++){
+            if(cardsList[i].id==id1){
+                for(let j = 0;j<cardsList[i].cardListContent.length;j++){
+                    if(cardsList[i].cardListContent[j].id==id2){
+                        return model.cardsList[i].cardListContent[j];
+                    }
+                }
+            }
+        }
+    },
+    editCard: function(id1,id2, task,status){
+        for(let i = 0;i<cardsList.length;i++){
+            if(cardsList[i].id==id1){
+                for(let j = 0;j<cardsList[i].cardListContent.length;j++){
+                    if(cardsList[i].cardListContent[j].id==id2){
+                         model.cardsList[i].cardListContent[j].task = task;
+                         model.cardsList[i].cardListContent[j].status = status;
+                         break;
+                    }
+                }
+                break;
+            }
+        }
+        view.render();
     }
 };
 
 const view = {
     init: function(){
-        div = document.querySelector(".card__add-list");
-        div.addEventListener('click',view.addAnotherListDisplay);
-        buttonCancel = document.getElementById("add-another-list-cancel-button");
-        buttonCancel.addEventListener('click',view.canceladdAnotherListDisplay);
-        buttonSave = document.getElementById("add-another-list-save-button");
-        buttonSave.addEventListener('click',view.saveAddAnotherListDisplay);
         accountManagementDiv = document.querySelector(".account-management-cancel");
         accountManagementDiv.addEventListener('click',view.removeAccountManagementDiv);
+        view.render();
     },
     render: function(){
-
+        section = document.querySelector(".card-group");
+        section.innerHTML = "";
+        view.createInitialDefaultDisplay();
+        cardList = octopus.getCardList();
+        for(let i = 0;i<cardList.length;i++){
+            view.createCardList(cardList[i]);
+        }
+    },
+    createInitialDefaultDisplay: function(){
+        section1 = document.querySelector(".card-group");
+        section = document.createElement('section');
+        section.classList.add("card", "body-color");
+        section1.append(section);
+        div1 = document.createElement("div");
+        div1.classList.add("card__add-list");
+        div1.addEventListener('click',view.addAnotherListDisplay);
+        div1.innerHTML = "<span>+ Add another list</span>";
+        section.append(div1);
+        div2 = document.createElement('div');
+        div2.classList.add("card__add-list");
+        div2.id = "add-another-list-input";
+        div2.style.display = "none";
+        section.append(div2);
+        input = document.createElement("input");
+        input.type = "text";
+        input.id = "add-another-list-in";
+        input.placeholder="Enter list title..";
+        div2.append(input);
+        div3 = document.createElement("div");
+        div3.classList.add("add-another-list-button");
+        div2.append(div3);
+        button1 = document.createElement('button');
+        button1.type="button";
+        button1.id = "add-another-list-save-button";
+        button1.textContent = "Save";
+        button1.addEventListener('click',view.saveAddAnotherListDisplay);
+        div3.append(button1);
+        button2 = document.createElement('button');
+        button2.type="button";
+        button2.id = "add-another-list-cancel-button";
+        button2.textContent = "Cancel";
+        button2.addEventListener('click',view.canceladdAnotherListDisplay);
+        div3.append(button2);
     },
     removeAccountManagementDiv: function(event){
         div = event.target.closest(".account-management");
         div.remove();
     }, 
-
     addAnotherListDisplay: function(event){
         event.currentTarget.style.display = "none";
         input = document.getElementById("add-another-list-input");
@@ -80,7 +172,6 @@ const view = {
     saveAddAnotherListDisplay: function(){
         val = document.getElementById("add-another-list-in").value;
         octopus.addCardList(val);
-        view.canceladdAnotherListDisplay();
     },
     createCardList: function(obj){
         section1 = document.createElement('section');
@@ -96,6 +187,7 @@ const view = {
         p1 = document.createElement('img');
         p1.src="assets/images/cancel-icon.png";
         p1.style.width = "20px";
+        p1.setAttribute("data-cardListIdRemove",obj.id);
         p1.addEventListener('click',view.removeCardList);
         div1.append(p1);
         section1.append(div1);
@@ -107,6 +199,7 @@ const view = {
         div22 = document.createElement('div');
         div22.classList.add("add-another-card");
         div22.textContent = "+ Add another card";
+        div22.setAttribute("data-cardListIdAddAnotherCard",obj.id);
         div22.addEventListener('click',view.addAnotherCard);
         div33 = document.createElement('div');
         div33.classList.add("add-another-card");
@@ -132,70 +225,142 @@ const view = {
         button1.type = "button";
         button1.classList.add("add-another-card-save-button");
         button1.textContent = "Save";
+        button1.setAttribute("data-cardListIdSaveAddAnotherCard",obj.id);
         button1.addEventListener("click",view.saveAddAnotherCard);
         div5.append(button1);
         button2 = document.createElement("button");
         button2.type = "button";
         button2.classList.add("add-another-card-cancel-button");
         button2.textContent = "Cancel";
+        button2.setAttribute("data-cardListIdCancelAddAnotherCard",obj.id);
         button2.addEventListener("click",view.cancelAddAnotherCard);
         div5.append(button2);
         div3.append(div4);
         //Card Appending
         section = document.querySelector(".card-group");
         section.insertBefore(section1,section.lastElementChild);
+        for(let i = 0;i<obj.cardListContent.length;i++){
+            view.addCard(obj.cardListContent[i],obj.id)
+        }
     },
     saveAddAnotherCard: function(event){
-        section = event.target.closest(".card");
-        id = section.getAttribute("data-cardListId");
+        id = event.target.getAttribute("data-cardListIdSaveAddAnotherCard");
+        section = document.querySelector(`[data-cardListId="${id}"]`);
         val = section.querySelector(".add-another-card-in").value;
         octopus.addCard(id,val);
-        view.addCard(event);
-        view.cancelAddAnotherCard(event);
     },
-    addCard: function(event){
-        section = event.target.closest(".card");
-        id = section.getAttribute("data-cardListId");
-        val = section.querySelector(".add-another-card-in").value;
+    addCard: function(obj,val){
+        section = document.querySelector(`[data-cardListId="${val}"]`);
         div1 = document.createElement('div');
-        div1.setAttribute("data-cardId",octopus.getCardId(id));
+        div1.setAttribute("data-cardId",obj.id);
         div1.classList.add("card-content");
+        div = document.createElement('div');
+        div.setAttribute("data-cardIdDefaultDisplay",obj.id);
+        div1.append(div);
         div2 = document.createElement('div');
         div2.classList.add("card-content-text");
-        div2.textContent = val;
+        div2.textContent = obj.task;
         div3 = document.createElement('div');
         div3.classList.add("card-content-status");
-        div3.innerHTML = "Status: <span>Assigned</span>";
+        div3.textContent = "Status: ";
+        span = document.createElement('span');
+        span.textContent = obj.status;
+        div3.append(span);
         img = document.createElement('img');
-        img.src = "assets/images/edit-icon.png";
+        img.src = "assets/images/cancel-icon.png";
+        img.setAttribute("data-cardListIdRemoveCard",val);
+        img.setAttribute("data-cardIdRemoveCard",obj.id);
         img.addEventListener('click',view.removeCard);
-        div1.append(div2);
-        div1.append(img);
+        img2 = document.createElement('img');
+        img2.src = "assets/images/edit-icon.png";
+        img2.setAttribute("data-cardListIdEditCard",val);
+        img2.setAttribute("data-cardIdEditCard",obj.id);
+        img2.addEventListener('click',view.editCard);
+        div.append(div2);
+        div.append(img);
+        div.append(img2);
         div2.append(div3);
+
+        //creating edit part 
+        div4 = document.createElement('div');
+        div4.setAttribute("data-cardIdEditDisplay",obj.id);
+        div4.style.display = "none";
+        div1.append(div4);
+        input1 = document.createElement('input');
+        input1.classList.add("card-edit-display-task-input");
+        div4.append(input1);
+        div5 = document.createElement('div');
+        div4.append(div5);
+        div5.textContent = "Status:";
+        input2 = document.createElement('input');
+        input2.classList.add("card-edit-display-status-input");
+        div5.append(input2);
+        div6 = document.createElement('div');
+        div6.classList.add("edit-card-button");
+        div4.append(div6);
+        button1 = document.createElement('button');
+        button1.textContent = "Save";
+        button1.setAttribute("data-cardListIdSaveEditCard",val);
+        button1.setAttribute("data-cardIdSaveEditCard",obj.id);
+        button1.addEventListener('click',view.saveEditCard);
+        div6.append(button1);
+        button2  = document.createElement('button');
+        button2.textContent = "Cancel";
+        button2.setAttribute("data-cardListIdCancelEditCard",val);
+        button2.setAttribute("data-cardIdCancelEditCard",obj.id);
+        button2.addEventListener('click',view.cancelEditCard);
+        div6.append(button2);
         section.querySelector(".card-content-group").insertBefore(div1,section.querySelector(".card-footer"));
     },
+    cancelEditCard: function(event){
+        id1 = event.target.getAttribute("data-cardListIdCancelEditCard");
+        id2 = event.target.getAttribute("data-cardIdCancelEditCard");
+        div1 = document.querySelector(`[data-cardListId="${id1}"]`);
+        div2 = div1.querySelector(`[data-cardIdDefaultDisplay="${id2}"]`);
+        div2.style.display = "";
+        div3 = div1.querySelector(`[data-cardIdEditDisplay="${id2}"]`);
+        div3.style.display = "none";
+    },
+    saveEditCard: function(event){
+        id1 = event.target.getAttribute("data-cardListIdSaveEditCard");
+        id2 = event.target.getAttribute("data-cardIdSaveEditCard");
+        div1 = document.querySelector(`[data-cardListId="${id1}"]`);
+        div2 = div1.querySelector(`[data-cardIdDefaultDisplay="${id2}"]`);
+        div3 = div1.querySelector(`[data-cardIdEditDisplay="${id2}"]`);
+        octopus.editCard(id1,id2,div3.querySelector(".card-edit-display-task-input").value,div3.querySelector(".card-edit-display-status-input").value);
+    },
+    editCard: function(event){
+        id1 = event.target.getAttribute("data-cardListIdEditCard");
+        id2 = event.target.getAttribute("data-cardIdEditCard");
+        div1 = document.querySelector(`[data-cardListId="${id1}"]`);
+        div2 = div1.querySelector(`[data-cardIdDefaultDisplay="${id2}"]`);
+        div2.style.display = "none";
+        div3 = div1.querySelector(`[data-cardIdEditDisplay="${id2}"]`);
+        div3.style.display = "block";
+        card = octopus.getIndividualCard(id1,id2);
+        div3.querySelector(".card-edit-display-task-input").value = card.task;
+        div3.querySelector(".card-edit-display-status-input").value = card.status;
+    },
     removeCard: function(event){
-        section = event.target.closest(".card");
-        id1 = section.getAttribute("data-cardListId");
-        div = event.target.closest(".card-content");
-        id2 = div.getAttribute("data-cardId");
-        div.remove();
+        id1 = event.target.getAttribute("data-cardListIdRemoveCard");
+        id2 = event.target.getAttribute("data-cardIdRemoveCard");
         octopus.removeCard(id1,id2);
     },
     cancelAddAnotherCard: function(event){
-        section = event.target.closest(".card");
+        id = event.target.getAttribute("data-cardListIdCancelAddAnotherCard");
+        section = document.querySelector(`[data-cardListId="${id}"]`);
         section.querySelector(".card-footer").style.display = "";
         section.querySelector(".add-another-card-input").style.display="none";
         section.querySelector(".add-another-card-in").value = "";
     },
     removeCardList: function(event){
-        section = event.target.closest(".card");
-        id = section.getAttribute("data-cardListId");
-        section.remove();
+        section = event.target;
+        id = section.getAttribute("data-cardListIdRemove");
         octopus.removeCardList(id);
     },
     addAnotherCard: function(event){
-        section = event.target.closest(".card");
+        id = event.target.getAttribute("data-cardListIdAddAnotherCard");
+        section = document.querySelector(`[data-cardListId="${id}"]`);
         section.querySelector(".card-footer").style.display = "none";
         section.querySelector(".add-another-card-input").style.display="";
     }

@@ -104,7 +104,7 @@ const view = {
     render: function(){
         divs = document.querySelector(".users");
         divs.innerHTML = "";
-        this.createAddUserCardInitial();
+        view.createAddUserCardInitial();
         users = octopus.getUsers();
         for(let i = 0;i<users.length;i++){
             view.createCard(users[i]);
@@ -230,7 +230,6 @@ const view = {
             location: innerdiv.querySelector(".add-user-info-location").querySelector("input").value,
             imageSource: innerdiv.querySelector(".add-user-info-image").querySelector("input").value
         }
-        octopus.editUser(obj);
         div.querySelector('.display-user-content').style.display="";
         div.querySelector('.add-user-info1').style.display="none";
         octopus.editUser(obj);

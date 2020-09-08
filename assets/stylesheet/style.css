@@ -278,6 +278,7 @@ strong{
     opacity: 0.5;
     visibility: hidden;
     bottom: 5px;
+    padding-top: 2px;
 }
 
 .card-content:hover{
@@ -347,11 +348,20 @@ strong{
 }
 
 #add-another-list-in,
-.add-another-card-in{
+.add-another-card-in,
+.card-edit-display-task-input,
+.card-edit-display-status-input
+{
     margin-right: 10px;
     box-sizing: border-box;
     width: 100%;
     padding: 7px;
+}
+
+
+.card-edit-display-status-input{
+    width: 78%;
+    margin: 10px 0 10px 10px;
 }
 
 .add-another-list-button{
@@ -367,12 +377,18 @@ strong{
 }
 
 .add-another-list-button button,
-.add-another-card-button button{
+.add-another-card-button button,
+.edit-card-button button{
+    margin-left: 5px;
     border:none;
     padding: 5px;
     border-radius: 3px;
     color:white;
     background-color: rgb(75,191,107);
+}
+
+button:hover{
+    cursor: pointer;
 }
 
 

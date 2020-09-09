@@ -1,9 +1,23 @@
 const model = {
-    cardsList: null,
-    cardListId:null,
     init: function(){
-        model.cardsList = [];
-        model.cardListId = 0;
+        if(!localStorage.cardsList){
+            localStorage.cardsList = JSON.stringify([]);
+        }
+        if(!localStorage.cardListId){
+            localStorage.cardListId = JSON.stringify(0);
+        }
+    },
+    getCardsList: function(){
+        return JSON.parse(localStorage.cardsList);
+    },
+    getCardListId: function(){
+        return JSON.parse(localStorage.cardListId);
+    },
+    updateCardsList: function(data){
+        localStorage.cardsList = JSON.stringify(data);
+    },
+    updateCardListId: function(data){
+        localStorage.cardListId = JSON.stringify(data);
     }
 };
 
@@ -19,52 +33,63 @@ const octopus = {
             cardListContent:[],
             cardId:0
         };
-        model.cardsList.push(obj);
+        cardsList = model.getCardsList();
+        cardsList.push(obj);
+        model.updateCardsList(cardsList);
         view.render();
     },
     getCardListId: function(){
-        return model.cardListId++;
+        val = model.getCardListId();
+        val++;
+        model.updateCardListId(val);
+        return val;
     },
     removeCardList: function(val){
-        cardsList = model.cardsList;
+        cardsList = model.getCardsList();
         for(let i = 0;i<cardsList.length;i++){
             if(cardsList[i].id==val){
-                model.cardsList.splice(i,1);
+                cardsList.splice(i,1);
+                model.updateCardsList(cardsList);
                 break;
             }
         }
         view.render();
     },
-    addCard: function(id,val,statusVal = "Assigned"){
+    addCard: function(id,val,statusVal = null){
         obj = {
             task: val,
             status:statusVal,
             id: octopus.getCardId(id)
         }
-        cardsList = model.cardsList;
+        cardsList = model.getCardsList();
         for(let i = 0;i<cardsList.length;i++){
             if(cardsList[i].id==id){
-                model.cardsList[i].cardListContent.push(obj);
+                cardsList[i].cardListContent.push(obj);
+                model.updateCardsList(cardsList);
                 break;
             }
         }
         view.render();
     },
     getCardId: function(val){
-        cardsList = model.cardsList;
+        cardsList = model.getCardsList();
         for(let i = 0;i<cardsList.length;i++){
             if(cardsList[i].id==val){
-                return model.cardsList[i].cardId++;
+                cardsList[i].cardId++;
+                val = cardsList[i].cardId;
+                model.updateCardsList(cardsList);
+                return val;
             }
         }
     },
     removeCard: function(id1,id2){
-        cardsList = model.cardsList;
+        cardsList = model.getCardsList();
         for(let i = 0;i<cardsList.length;i++){
             if(cardsList[i].id==id1){
                 for(let j = 0;j<cardsList[i].cardListContent.length;j++){
                     if(cardsList[i].cardListContent[j].id==id2){
-                        model.cardsList[i].cardListContent.splice(j,1);
+                        cardsList[i].cardListContent.splice(j,1);
+                        model.updateCardsList(cardsList);
                         break;
                     }
                 }
@@ -74,26 +99,29 @@ const octopus = {
         view.render();
     },
     getCardList: function(){
-        return model.cardsList;
+        return model.getCardsList();
     },
     getIndividualCard: function(id1,id2){
+        cardsList = model.getCardsList();
         for(let i = 0;i<cardsList.length;i++){
             if(cardsList[i].id==id1){
                 for(let j = 0;j<cardsList[i].cardListContent.length;j++){
                     if(cardsList[i].cardListContent[j].id==id2){
-                        return model.cardsList[i].cardListContent[j];
+                        return cardsList[i].cardListContent[j];
                     }
                 }
             }
         }
     },
     editCard: function(id1,id2, task,status){
+        cardsList = model.getCardsList();
         for(let i = 0;i<cardsList.length;i++){
             if(cardsList[i].id==id1){
                 for(let j = 0;j<cardsList[i].cardListContent.length;j++){
                     if(cardsList[i].cardListContent[j].id==id2){
-                         model.cardsList[i].cardListContent[j].task = task;
-                         model.cardsList[i].cardListContent[j].status = status;
+                         cardsList[i].cardListContent[j].task = task;
+                         cardsList[i].cardListContent[j].status = status;
+                         model.updateCardsList(cardsList);
                          break;
                     }
                 }
@@ -111,12 +139,13 @@ const octopus = {
         obj = octopus.getIndividualCard(id1,id2);
         task = obj.task;
         status = obj.status;
-        cardsList = model.cardsList;
+        cardsList = model.getCardsList();
         for(let i = 0;i<cardsList.length;i++){
             if(cardsList[i].id==id1){
                 for(let j = 0;j<cardsList[i].cardListContent.length;j++){
                     if(cardsList[i].cardListContent[j].id==id2){
-                        model.cardsList[i].cardListContent.splice(j,1);
+                        cardsList[i].cardListContent.splice(j,1);
+                        model.updateCardsList(cardsList);
                         break;
                     }
                 }
@@ -301,7 +330,7 @@ const view = {
         div2.textContent = obj.task;
         div3 = document.createElement('div');
         div3.classList.add("card-content-status");
-        div3.textContent = "Status: ";
+        div3.textContent = "Due Date: ";
         span = document.createElement('span');
         span.textContent = obj.status;
         div3.append(span);
@@ -330,8 +359,9 @@ const view = {
         div4.append(input1);
         div5 = document.createElement('div');
         div4.append(div5);
-        div5.textContent = "Status:";
+        div5.textContent = "Due Date:";
         input2 = document.createElement('input');
+        input2.type = "date";
         input2.classList.add("card-edit-display-status-input");
         div5.append(input2);
         div6 = document.createElement('div');

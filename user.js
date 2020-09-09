@@ -1,9 +1,23 @@
 const model = {
-    users: null,
-    totalUsers:null,
     init: function(){
-        model.users = [];
-        model.totalUsers = 0;
+        if(!localStorage.users){
+            localStorage.users = JSON.stringify([]);
+        }
+        if(!localStorage.totalUsers){
+            localStorage.totalUsers = JSON.stringify(0);
+        }
+    },
+    getUsers: function(){
+        return JSON.parse(localStorage.users);
+    },
+    getTotalUsers: function(){
+        return JSON.parse(localStorage.totalUsers);
+    },
+    updateUsers: function(data){
+        localStorage.users = JSON.stringify(data);
+    },
+    updateTotalUsers: function(data){
+        localStorage.totalUsers = JSON.stringify(data);
     }
 };
 
@@ -13,10 +27,10 @@ const octopus = {
         view.init();
     },
     getUsers: function(){
-        return model.users;
+        return model.getUsers();
     },
     getUser: function(val){
-        users = model.users;
+        users = model.getUsers();
         for(let i = 0;i<users.length;i++){
             if(users[i].id==val){
                 return users[i];
@@ -24,27 +38,34 @@ const octopus = {
         }
     },
     addUser: function(obj){
-        model.users.push(obj);
+        users = model.getUsers();
+        users.push(obj);
+        model.updateUsers(users);
         view.render();
     },
     userId: function(){
-        return model.totalUsers++;
+        val = model.getTotalUsers();
+        val++;
+        model.updateTotalUsers(val);
+        return val;
     },
     removeUser: function(val){
-        users = model.users;
+        users = model.getUsers();
         for(let i = 0;i<users.length;i++){
             if(users[i].id==val){
-                model.users.splice(i,1);
+                users.splice(i,1);
+                model.updateUsers(users);
                 break;
             }
         }
         view.render();
     },
     editUser: function(obj){
-        users = model.users;
+        users = model.getUsers();
         for(let i = 0;i<users.length;i++){
             if(users[i].id==obj.id){
                 users[i] = obj;
+                model.updateUsers(users);
                 break;
             }
         }
